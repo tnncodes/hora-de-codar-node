@@ -118,7 +118,7 @@ function checkAccount(accountName) {
 };
 
 function addAmount(accountName, amount) {
-  const accountData = getAmount(accountName); 
+  const accountData = getAccount(accountName); 
 
   if (!amount) {
     console.log(chalk.bgRed.black('Ocorreu um erro, tente novamente mais tarde!'));
@@ -138,7 +138,7 @@ function addAmount(accountName, amount) {
   console.log(chalk.green(`Foi depositado o valor de R$ ${amount} na sua conta!`));
 };
 
-function getAmount(accountName) {
+function getAccount(accountName) {
   const accountJSON = fs.readFileSync(`accounts/${accountName}.json`, {
     encoding: 'utf8',
     flag: 'r'
@@ -161,7 +161,7 @@ function getAccountBalance() {
       return getAccountBalance();
     };
 
-    const accountData = getAmount(accountName);
+    const accountData = getAccount(accountName);
 
     console.log(chalk.bgBlue.black(
       `Olá, o saldo da sua conta é de R$ ${accountData.balance}`
@@ -193,8 +193,44 @@ function withDraw() {
       }
     ]).then((answer) => {
       const amount = answer['amount'];
-      console.log(amount);
-      operation();
+
+      removeAmount(accountName, amount);
     }).catch(err => console.log(err));
   }).catch(err => console.log(err));
 };
+
+function removeAmount(accountName, amount) {
+  const accountData = getAccount(accountName);
+
+  if (!amount) {
+    console.log(
+      chalk.bgRed.black('Ocorreu um erro, tente novamente mais tarde!')
+    );
+
+    return withDraw();
+  };
+
+  if (accountData.balance < amount) {
+    console.log(
+      chalk.bgRed.black('Valor indisponivel!')
+    );
+
+    return withDraw();
+  }
+
+  accountData.balance = parseFloat(accountData.balance) - parseFloat(amount);
+
+  fs.writeFileSync(
+    `accounts/${accountName}.json`,
+    JSON.stringify(accountData),
+    function(err) {
+      console.log(err);
+    }
+  );
+
+  console.log(
+    chalk.green(`Foi realizado um saque de R$ ${amount} da sua conta`)
+  );
+
+  operation();
+}
