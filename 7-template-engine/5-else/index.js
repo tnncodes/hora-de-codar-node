@@ -16,9 +16,8 @@ app.get('/', (req, res) => {
     surname: 'Doe'
   };
   const auth = true;
-  const approved = false;
   
-  res.render('home', { user: user, auth, approved });
+  res.render('home', { user: user, auth });
 });
 
 app.listen(3000, () => {
