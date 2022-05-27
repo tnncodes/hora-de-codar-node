@@ -39,7 +39,7 @@ const conn = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'battisti-node'
+  database: 'battisti_node'
 });
 
 conn.connect(function(err) {
