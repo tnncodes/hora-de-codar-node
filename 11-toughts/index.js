@@ -65,10 +65,12 @@ app.use((req, res, next) => {
   next();
 });
 
+// base route
+app.get('/', ToughtsController.showToughts)
+
 // Routes
 app.use('toughts', toughtsRoutes);
 app.use('/', authRoutes);
-app.get('/', ToughtsController.showToughts)
 
 conn
   // .sync({ force: true })
