@@ -1,4 +1,4 @@
 ```bash
-# instalar lib na aplicação
+# instalação de lib na aplicação
 npm install lodash
 ```
