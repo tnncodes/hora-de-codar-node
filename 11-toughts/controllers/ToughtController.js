@@ -4,7 +4,7 @@ const User = require('../models/User');
 module.exports = class ToughtController {
   static async showToughts(req, res) {
     res.render('toughts/home');
-  };
+  }
 
   static async dashboard(req, res) {
     const userId = req.session.userid;
@@ -14,7 +14,7 @@ module.exports = class ToughtController {
       },
       include: Tought,
       plain: true, 
-    });
+    })
 
     // check if user exists
     if (!user) {
@@ -23,17 +23,17 @@ module.exports = class ToughtController {
 
     const toughts = user.Toughts.map((result) => result.dataValues);
     res.render('toughts/dashboard', { toughts });
-  };
+  }
 
   static createTought(req, res) {
     res.render('toughts/create');
-  };
+  }
 
   static async createToughtSave(req, res) {
     const tought = {
       title: req.body.title,
       UserId: req.session.userid
-    };
+    }
 
     try {
       await Tought.create(tought);
@@ -44,5 +44,20 @@ module.exports = class ToughtController {
     } catch (error) {
       console.log(error);
     }
-  };
-};
+  }
+
+  static async removeTought(req, res) {
+    const id = req.body.id;
+    const UserId = req.session.userid;
+
+    try {
+      await Tought.destroy({ where: { id: id, UserId: UserId } });
+      req.flash('message', 'Pensamento removido com sucesso!');
+      req.session.save(() => {
+        res.redirect('/toughts/dashboard')
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
