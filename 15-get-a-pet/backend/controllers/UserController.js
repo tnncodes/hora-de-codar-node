@@ -55,7 +55,7 @@ module.exports = class UserController {
       email,
       phone, 
       password: passwordHash
-    });
+    })
 
     try {
       const newUser = await user.save();
@@ -63,7 +63,7 @@ module.exports = class UserController {
     } catch (error) {
       res.status(500).json({ message: error });
     }
-  };
+  }
 
   static async login(req, res) {
     const { email, password } = req.body;
@@ -95,7 +95,7 @@ module.exports = class UserController {
     }
 
     await createUserToken(user, req, res);
-  };
+  }
 
   static async checkUser(req, res) {
     let currentUser;
@@ -108,5 +108,21 @@ module.exports = class UserController {
     } else  {
       currentUser = null;
     }
+
+    res.status(200).send(currentUser);
+  }
+
+  static async getUserById(req, res) {
+    const { id } = req.params;
+    const user = await User.findById(id).select('-password');
+
+    if (!user) {
+      res.status(422).json({
+        message: 'Usuário não encontrado!',
+      });
+      return;
+    }
+
+    res.status(200).json({ user });
   }
 }
