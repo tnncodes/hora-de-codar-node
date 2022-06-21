@@ -8,6 +8,7 @@ module.exports = class PetController {
   static async create(req, res) {
     const { name, age, weight, color } = req.body;
     const images = req.files;
+    console.log(images);
     const available = true;
 
     // images upload
@@ -107,6 +108,7 @@ module.exports = class PetController {
   static async getPetById(req, res) {
     const id = req.params.id;
 
+    // check if id is valid
     if (!ObjectId.isValid(id)) {
       res.status(422).json({ message: 'ID inválido.' });
       return;
@@ -122,5 +124,33 @@ module.exports = class PetController {
     res.status(200).json({
       pet: pet,
     })
+  }
+
+  // Remove Pet for ID
+  static async removePetById(req, res) {
+    const id = req.params.id;
+
+    // check if id is valid
+    if (!ObjectId.isValid(id)) {
+      res.status(422).json({ message: 'ID inválido.' });
+      return;
+    }
+
+    // check if pet exists
+    const pet = await Pet.findOne({ _id: id });
+    if (!pet) {
+      res.status(404).json({ message: 'Pet não encontrado.' });
+      return;
+    }
+
+    // check if logged in user registered the pet
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+    if (pet.user._id.toString() !== user._id.toString()) {
+      res.status(422).json({ message: 'Houve um problema em processar a sua solicitação, tente novamente mais tarde.' });
+    } 
+    
+    await Pet.findByIdAndRemove(id);
+    res.status(200).json({ message: 'Pet removido com sucesso!' });
   }
 }
