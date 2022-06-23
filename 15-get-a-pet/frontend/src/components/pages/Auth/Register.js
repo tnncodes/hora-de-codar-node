@@ -37,7 +37,7 @@ function Register() {
         <Input 
           text="Telefone"
           type="text"
-          name="name"
+          name="phone"
           placeholder="Digite o seu telefone"
           handleOnChange={handleOnChange}
         />
@@ -61,7 +61,7 @@ function Register() {
         <Input 
           text="Confirmação de senha"
           type="password"
-          name="confirmPassword"
+          name="confirmpassword"
           placeholder="Confirm a sua senha"
           handleOnChange={handleOnChange}
         />
