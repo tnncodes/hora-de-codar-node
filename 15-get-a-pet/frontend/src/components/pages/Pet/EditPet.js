@@ -10,7 +10,7 @@ function EditPet() {
   return (
     <section>
       <div className={styles.addpet_header}>
-        <h1>Editando o Pet: 'pet.name'</h1>
+        <h1>Editando o Pet: 'pet.nameç'</h1>
         <p>Depois da edição os dados serão atualizados no sistema</p>
       </div>
     </section>
